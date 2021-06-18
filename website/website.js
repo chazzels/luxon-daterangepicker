@@ -1,5 +1,7 @@
 $(document).ready(function() {
-
+    
+    window.DateTime = luxon.DateTime;
+    
     $('#config-text').keyup(function() {
       eval($(this).val());
     });
@@ -14,12 +16,12 @@ $(document).ready(function() {
 
     $('#startDate').daterangepicker({
       singleDatePicker: true,
-      startDate: moment().subtract(6, 'days')
+      startDate: DateTime.local().minus({days: 6}),
     });
 
     $('#endDate').daterangepicker({
       singleDatePicker: true,
-      startDate: moment()
+      startDate: DateTime.local(),
     });
 
     //updateConfig();
@@ -63,17 +65,21 @@ $(document).ready(function() {
       if ($('#maxSpan').is(':checked'))
         options.maxSpan = { days: 7 };
 
+
+/*
       if ($('#ranges').is(':checked')) {
         options.ranges = {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          'Today': [DateTime().local(), DateTime().local()],
+          'Yesterday': [DateTime().local().minus({days: 1), DateTime().local().minus({days: 1})],
+          'Last 7 Days': [DateTime().local().mius({days: 6}), DateTime().local()],
+          'Last 30 Days': [DateTime().local().minus({days: 29}), DateTime().local()],
+          'This Month': [DateTime().local().startOf('month'), DateTime().local().endOf('month')],
+          'Last Month': [DateTime().local().minus({month: 1}).startOf('month'), DateTime().local().minus({months: 1}).endOf('month')]
         };
       }
-
+      */
+      
+      /* LUXONO - DISABLE
       if ($('#locale').is(':checked')) {
         options.locale = {
           format: 'MM/DD/YYYY',
@@ -89,6 +95,7 @@ $(document).ready(function() {
           firstDay: 1
         };
       }
+      */
 
       if (!$('#linkedCalendars').is(':checked'))
         options.linkedCalendars = false;
@@ -132,7 +139,7 @@ $(document).ready(function() {
       if ($('#cancelButtonClasses').val().length && $('#cancelButtonClasses').val() != 'btn-default')
         options.cancelClass = $('#cancelButtonClasses').val();
 
-      $('#config-demo').daterangepicker(options, function(start, end, label) { console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); });
+      $('#config-demo').daterangepicker(options, function(start, end, label) { console.log('New date range selected: ' + start.toFormat('yyyy-MM-dd') + ' to ' + end.toFormat('yyyy-MM-dd') + ' (predefined range: ' + label + ')'); });
       
       if (typeof options.ranges !== 'undefined') {
         options.ranges = {};
@@ -141,16 +148,16 @@ $(document).ready(function() {
       var option_text = JSON.stringify(options, null, '    ');
 
       var replacement = "ranges: {\n"
-          + "        'Today': [moment(), moment()],\n"
-          + "        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],\n"
-          + "        'Last 7 Days': [moment().subtract(6, 'days'), moment()],\n"
-          + "        'Last 30 Days': [moment().subtract(29, 'days'), moment()],\n"
-          + "        'This Month': [moment().startOf('month'), moment().endOf('month')],\n"
-          + "        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]\n"
+          + "        'Today': [DateTime().local(), DateTime().local()],\n"
+          + "        'Yesterday': [DateTime().local().minus({days: 1}), DateTime().local().minus({days: 1)],\n"
+          + "        'Last 7 Days': [DateTime().local().minus({days: 6}), DateTime().local()],\n"
+          + "        'Last 30 Days': [DateTime().local().minus({days: 29}), DateTime().local()],\n"
+          + "        'This Month': [DateTime().local().startOf('month'), DateTime().local().endOf('month')],\n"
+          + "        'Last Month': [DateTime().local().minus({month: 1}).startOf('month'), DateTime().local().minus({month: 1}).endOf('month')]\n"
           + "    }";
       option_text = option_text.replace(new RegExp('"ranges"\: \{\}', 'g'), replacement);
 
-      $('#config-text').val("$('#demo').daterangepicker(" + option_text + ", function(start, end, label) {\n  console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');\n});");
+      $('#config-text').val("$('#demo').daterangepicker(" + option_text + ", function(start, end, label) {\n  console.log('New date range selected: ' + start.toFormat('yyyy-MM-dd') + ' to ' + end.toFormat('yyyy-MM-dd') + ' (predefined range: ' + label + ')');\n});");
 
     }
 

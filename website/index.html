@@ -11,7 +11,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+        <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/1.27.0/luxon.min.js" integrity="sha512-cQXElo4AdS11Wtr5GFBmliue0OBZIhJjcSOSmF3RASBNfJMrkhF/F5JknHUm9klwHLLVG5+oiV6INy/yjgYPoA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.2.1/trianglify.min.js"></script>
 
         <script type="text/javascript" src="daterangepicker.js"></script>
@@ -21,7 +22,7 @@
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 
-        <script src="website.js"></script>
+        <!-- <script src="website.js"></script> -->
         <link rel="stylesheet" type="text/css" href="website.css" />
 
         <meta name="google-site-verification" content="1fP-Eo9i1ozV4MUlqZv2vsLv1r7tvYutUb6i38v0_vg" />
@@ -95,9 +96,6 @@
                              data-ad-client="ca-pub-9095657276960731"
                              data-ad-slot="8963174596"
                              data-ad-format="auto"></ins>
-                        <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
                     </div>
 
                 </div>
@@ -129,7 +127,7 @@
                             <input type="text" name="dates" class="form-control pull-right" />
                             <script>
                                 $(function() {
-                                    $('input[name="dates"]').daterangepicker({ startDate: moment(), endDate: moment().add(2, 'day')});
+                                    $('input[name="dates"]').daterangepicker();
                                 })
                             </script>
                         </div>
@@ -151,14 +149,14 @@
                             </div>
                             <div class="col-4">
                                 <label>Produces:</label>
-                                <input type="text" name="daterange" class="form-control" value="1/01/2018 - 01/15/2018" />
+                                <input type="text" name="daterange" class="form-control" value="2018-01-01 - 2018-01-15" />
 
                                 <script>
                                 $(function() {
                                   $('input[name="daterange"]').daterangepicker({
                                     opens: 'left'
                                   }, function(start, end, label) {
-                                    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                                    console.log("A new date selection was made: " + start.toFormat('yyyy-MM-dd') + ' to ' + end.toFormat('yyyy-MM-dd'));
                                   });
                                 });
                                 </script>
@@ -182,11 +180,8 @@
                                 $(function() {
                                   $('input[name="datetimes"]').daterangepicker({
                                     timePicker: true,
-                                    startDate: moment().startOf('hour'),
-                                    endDate: moment().startOf('hour').add(32, 'hour'),
-                                    locale: {
-                                      format: 'M/DD hh:mm A'
-                                    }
+                                    startDate: DateTime().local().startOf('hour'),
+                                    endDate: DateTime().local().startOf('hour').plus({hours: 32}),
                                   });
                                 });
                                 </script>
@@ -204,17 +199,17 @@
                             </div>
                             <div class="col-4">
                                 <label>Produces:</label>
-                                <input type="text" name="birthday" class="form-control pull-right" value="10/24/1984" />
+                                <input type="text" name="birthday" class="form-control pull-right birthday" value="1984-10-24" />
 
                                 <script>
                                 $(function() {
                                   $('input[name="birthday"]').daterangepicker({
                                     singleDatePicker: true,
-                                    showDropdowns: true,
-                                    minYear: 1901,
-                                    maxYear: parseInt(moment().format('YYYY'),10)
+                                    showDropdowns: true, // FIX
+                                    //minYear: 1901, // FIX
+                                    //maxYear: DateTime().local().year, // FIX
                                   }, function(start, end, label) {
-                                    var years = moment().diff(start, 'years');
+                                    var years = end.diff(start, ['years']).values.years;
                                     alert("You are " + years + " years old!");
                                   });
                                 });
@@ -242,23 +237,23 @@
                                 <script type="text/javascript">
                                 $(function() {
 
-                                    var start = moment().subtract(29, 'days');
-                                    var end = moment();
+                                    var start = DateTime.local().minus({days: 29});
+                                    var end = DateTime.local();
 
                                     function cb(start, end) {
-                                        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                                        $('#reportrange span').html(start.toFormat('MMMM dd, yyyy') + ' - ' + end.toFormat('MMMM dd, yyyy'));
                                     }
 
                                     $('#reportrange').daterangepicker({
                                         startDate: start,
                                         endDate: end,
                                         ranges: {
-                                           'Today': [moment(), moment()],
-                                           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                                           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                                           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                                           'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                                           'Today': [DateTime.local(), DateTime.local()],
+                                           'Yesterday': [DateTime.local().minus({days: 1}), DateTime.local().minus({days: 1})],
+                                           'Last 7 Days': [DateTime.local().minus({days: 6}), DateTime.local()],
+                                           'Last 30 Days': [DateTime.local().minus({days: 29}), DateTime.local()],
+                                           'This Month': [DateTime.local().startOf('month'), DateTime.local().endOf('month')],
+                                           'Last Month': [DateTime.local().minus({months: 1}).startOf('month'), DateTime.local().minus({months: 1}).endOf('month')]
                                         }
                                     }, cb);
 
@@ -288,13 +283,10 @@
 
                                   $('input[name="datefilter"]').daterangepicker({
                                       autoUpdateInput: false,
-                                      locale: {
-                                          cancelLabel: 'Clear'
-                                      }
                                   });
 
                                   $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
-                                      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                                      $(this).val(picker.startDate.toFormat('MM/dd/yyyy') + ' - ' + picker.endDate.toFormat('MM/dd/yyyy'));
                                   });
 
                                   $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
@@ -495,12 +487,12 @@
 
                               <div class="form-group">
                                 <label for="startDate">startDate</label>
-                                <input type="text" class="form-control" id="startDate" value="07/01/2017">
+                                <input type="text" class="form-control" id="startDate" value="2017-07-01">
                               </div>
 
                               <div class="form-group">
                                 <label for="endDate">endDate</label>
-                                <input type="text" class="form-control" id="endDate" value="07/15/2017">
+                                <input type="text" class="form-control" id="endDate" value="2017-07-15">
                               </div>
 
                               <div class="form-group">
