@@ -7,29 +7,29 @@
 */
 // Following the UMD template https://github.com/umdjs/umd/blob/master/templates/returnExportsGlobal.js
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Make globaly available as well
-        define(['luxon', 'jquery'], function (luxon, jquery) {
-            if (!jquery.fn) jquery.fn = {}; // webpack server rendering
-            if (typeof luxon !== 'function' && luxon.hasOwnProperty('default')) luxon = luxon['default']
-            return factory(luxon, jquery);
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        // Node / Browserify
-        //isomorphic issue
-        var jQuery = (typeof window != 'undefined') ? window.jQuery : undefined;
-        if (!jQuery) {
-            jQuery = require('jquery');
-            if (!jQuery.fn) jQuery.fn = {};
-        }
-        var luxon = (typeof window != 'undefined' && typeof window.luxon != 'undefined') ? window.luxon : require('luxon');
-        module.exports = factory(luxon, jQuery);
-    } else {
-        // Browser globals
-        root.daterangepicker = factory(root.moment, root.jQuery);
-    }
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Make globaly available as well
+		define(['luxon', 'jquery'], function (luxon, jquery) {
+			if (!jquery.fn) jquery.fn = {}; // webpack server rendering
+			if (typeof luxon !== 'function' && luxon.hasOwnProperty('default')) luxon = luxon['default']
+			return factory(luxon, jquery);
+		});
+	} else if (typeof module === 'object' && module.exports) {
+		// Node / Browserify
+		//isomorphic issue
+		var jQuery = (typeof window != 'undefined') ? window.jQuery : undefined;
+		if (!jQuery) {
+			jQuery = require('jquery');
+			if (!jQuery.fn) jQuery.fn = {};
+		}
+		var luxon = (typeof window != 'undefined' && typeof window.luxon != 'undefined') ? window.luxon : require('luxon');
+		module.exports = factory(luxon, jQuery);
+	} else {
+		// Browser globals
+		root.daterangepicker = factory(root.moment, root.jQuery);
+	}
 }(typeof window !== 'undefined' ? window : this, function(moment, $) {
-    var DateRangePicker = function(element, options, cb) {
+	var DateRangePicker = function(element, options, cb) {
 		
 		window.DateTime = luxon.DateTime; // LUXON - ADD
 		
@@ -1609,17 +1609,17 @@
 		
 	};
 
-    $.fn.daterangepicker = function(options, callback) {
-        var implementOptions = $.extend(true, {}, $.fn.daterangepicker.defaultOptions, options);
-        this.each(function() {
-            var el = $(this);
-            if (el.data('daterangepicker'))
-                el.data('daterangepicker').remove();
-            el.data('daterangepicker', new DateRangePicker(el, implementOptions, callback));
-        });
-        return this;
-    };
+	$.fn.daterangepicker = function(options, callback) {
+		var implementOptions = $.extend(true, {}, $.fn.daterangepicker.defaultOptions, options);
+		this.each(function() {
+			var el = $(this);
+			if (el.data('daterangepicker'))
+				el.data('daterangepicker').remove();
+			el.data('daterangepicker', new DateRangePicker(el, implementOptions, callback));
+		});
+		return this;
+	};
 
-    return DateRangePicker;
+	return DateRangePicker;
 
 }));
