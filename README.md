@@ -18,6 +18,8 @@ This is a fork of the Date Range Picker component with changes made to remove th
 - invisble overflow days from `option.dayOverflow` can still be clicked. 
 - mobile sytle overhaul
 - reconvert styles to scss. 
+- improve position at smaller breakpoints.
+- add css variables for easy color pallette configuration.
 
 #### Notes:
 - when using `minSpan`, ranges that do not meat this requirement will have days automatically added to them. This addition will respect the order the dates were selected in (e.g. if the `minSpan = 3` and the 26th is selected first then the 24th is selected, the range will automatically be changed to 23rd-26th and vice versa ).
