@@ -1,7 +1,7 @@
 {
-  "name": "daterangepicker",
+  "name": "luxon-daterangepicker",
   "version": "3.1.0",
-  "description": "Date range picker component for Bootstrap",
+  "description": "Date range picker component using Luxon",
   "main": "daterangepicker.js",
   "style": "daterangepicker.css",
   "scripts": {
@@ -9,20 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dangrossman/daterangepicker.git"
+    "url": "https://github.com/chazzels/luxon-daterangepicker.git"
   },
   "author": {
-    "name": "Dan Grossman",
-    "email": "dan@dangrossman.info",
-    "url": "http://www.dangrossman.info"
+    "name": "Chazzels",
+    "email": "",
+    "url": ""
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dangrossman/daterangepicker/issues"
+    "url": "https://github.com/chazzels/luxon-daterangepicker/issues"
   },
-  "homepage": "https://github.com/dangrossman/daterangepicker",
+  "homepage": "https://github.com/chazzels/luxon-daterangepicker",
   "dependencies": {
     "jquery": ">=1.10",
-    "moment": "^2.9.0"
   }
 }
