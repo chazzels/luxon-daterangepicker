@@ -23,12 +23,13 @@ This is a fork of the Date Range Picker component with changes made to remove th
 - when using `minSpan`, ranges that do not meat this requirement will have days automatically added to them. This addition will respect the order the dates were selected in (e.g. if the `minSpan = 3` and the 26th is selected first then the 24th is selected, the range will automatically be changed to 23rd-26th and vice versa ).
 
 ## Build System
-Trying to limit the work needed for myself I lifted this build code from some code I made. 
-__Build System:__ Gulp.js
-__Build Packages:__ gulp, gulp-uglify, gulp-sass
-__Build Command:__ `$ gulp dist`
+Trying to limit the work needed for myself I lifted this build code from some code I made.
 
-### Fork Note
+__Build System:__ Gulp.js  
+__Build Packages:__ gulp, gulp-uglify, gulp-sass  
+__Build Command:__ `$ gulp dist`  
+
+## Fork Note
 I attempted to limit the changes to keep the code as close to source, but I did add some features that were not in the orginal library. Some of these I needed and others I felt help round out the functionality and experience. My main focus in doing this work was more on date range selection so the time picker and single picker could use more refinement. My goal is to have the library fully working but I am limited by time. 
 
 ## Original Read Me:
