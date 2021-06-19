@@ -47,8 +47,8 @@
 		this.autoApply = false;
 		this.singleDatePicker = false;
 		this.showDropdowns = false;
-		this.minYear = DateTime.local().startOf('year').year; // LUXON
-		this.maxYear = DateTime.local().plus({years: 1}).year; // LUXON
+		this.minYear = DateTime.local().minus({years: 100}).year; // LUXON
+		this.maxYear = DateTime.local().plus({years: 100}).year; // LUXON
 		this.showWeekNumbers = false;
 		this.showISOWeekNumbers = false;
 		this.showCustomRangeLabel = true;
@@ -356,8 +356,8 @@
 				
 				// If the end of the range is before the minimum or the start of the range is
 				// after the maximum, don't display this range option at all.
-				if ((this.minDate && end.isBefore(this.minDate, this.timepicker ? 'minute' : 'day')) // MOMENT
-				  || (maxDate && start.isAfter(maxDate, this.timepicker ? 'minute' : 'day'))) // MOMENT
+				if ((this.minDate && end < this.minDate.startOf(this.timepicker ? 'minute' : 'day')) // LUXON
+				  || (maxDate && start > maxDate.startOf(this.timepicker ? 'minute' : 'day'))) // LUXON
 					continue;
 				
 				//Support unicode chars in the range names.
@@ -477,7 +477,7 @@
 				this.startDate = startDate.startOf('minute'); // LUXON
 			
 			if (!this.timePicker)
-				this.startDate = this.startDate.startOf('day'); // LUXON
+				this.startDate = this.startDate.startOf('minute'); // LUXON
 			
 			if (this.timePicker && this.timePickerIncrement)
 				this.startDate.set({minute: Math.round(this.startDate.minute / this.timePickerIncrement) * this.timePickerIncrement}); // LUXON
@@ -1459,7 +1459,7 @@
 		monthOrYearChanged: function(e) {
 			var isLeft = $(e.target).closest('.drp-calendar').hasClass('left'),
 				leftOrRight = isLeft ? 'left' : 'right',
-						zcal = this.container.find('.drp-calendar.'+leftOrRight);
+				cal = this.container.find('.drp-calendar.'+leftOrRight);
 			
 			// Month must be Number for new moment versions
 			var month = parseInt(cal.find('.monthselect').val(), 10);

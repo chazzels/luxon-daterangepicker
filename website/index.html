@@ -154,7 +154,8 @@
                                 <script>
                                 $(function() {
                                   $('input[name="daterange"]').daterangepicker({
-                                    opens: 'left'
+                                    opens: 'left',
+                                    dayOverflow: false,
                                   }, function(start, end, label) {
                                     console.log("A new date selection was made: " + start.toFormat('yyyy-MM-dd') + ' to ' + end.toFormat('yyyy-MM-dd'));
                                   });
@@ -179,7 +180,7 @@
                                 <script>
                                 $(function() {
                                   $('input[name="datetimes"]').daterangepicker({
-                                    timePicker: true,
+                                    //timePicker: true, // FIX
                                     startDate: DateTime().local().startOf('hour'),
                                     endDate: DateTime().local().startOf('hour').plus({hours: 32}),
                                   });
@@ -205,11 +206,11 @@
                                 $(function() {
                                   $('input[name="birthday"]').daterangepicker({
                                     singleDatePicker: true,
-                                    showDropdowns: true, // FIX
-                                    //minYear: 1901, // FIX
+                                    showDropdowns: true, 
+                                    minYear: 1901, // FIX
                                     //maxYear: DateTime().local().year, // FIX
                                   }, function(start, end, label) {
-                                    var years = end.diff(start, ['years']).values.years;
+                                    var years = Math.abs(Math.floor(DateTime.local().diff(end, ['years']).values.years));
                                     alert("You are " + years + " years old!");
                                   });
                                 });
