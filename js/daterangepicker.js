@@ -1284,7 +1284,7 @@
 			var leftCalendar = this.leftCalendar;
 			var rightCalendar = this.rightCalendar;
 			var startDate = this.startDate;
-			var minSpan = this.minSpan ? this.minSpan : 0;
+			var minSpan = this.minSpan ? this.minSpan : 0;  // LUXON - ADD // making sure an unset minSpan does not cause issues.
 			
 			// LUXON - ADD // prevent minSpan dates fro being stuck in that state when direction chagnes.
 			$('td.min-span').removeClass('min-span');
@@ -1301,15 +1301,18 @@
 					var cal = $(el).parents('.drp-calendar');
 					var dt = cal.hasClass('left') ? leftCalendar.calendar[row][col] : rightCalendar.calendar[row][col];
 					
-					if (minSpan && date >= startDate && dt > startDate && dt < startDate.plus({days: minSpan-1})) { 
+					if (minSpan && dt.day == startDate.day &&  dt.month == startDate.month && dt.year == startDate.year) {
+					// LUXON - ADD // minSpan active. day is start day. 
+						$(el).addClass('min-span');
+					} else if (minSpan && date >= startDate && dt > startDate && dt < startDate.plus({days: minSpan-1})) { 
 					// LUXON - ADD // minSpan active. selected date after start. day after start and in range. 
 						$(el).addClass('min-span', 'in-range'); // LUXON - ADD
-					} else if(minSpan && date < startDate && dt < startDate && dt > startDate.minus({days: minSpan-1})) { 
+					} else if (minSpan && date < startDate && dt < startDate && dt > startDate.minus({days: minSpan-1})) { 
 					// LUXON - ADD // minSpan active. selected date before start. day before start and in range. 
 						$(el).addClass('min-span', 'in-range'); // LUXON - ADD
 					} else if ((dt > startDate && dt < date) || dt == date) { // LUXON
 						$(el).addClass('in-range');
-					} else if(dt < startDate && dt > date) { 
+					} else if (dt < startDate && dt > date) { 
 					// LUXON - ADD // second date is before start date.
 						$(el).addClass('in-range'); // LUXON - ADD
 					} else {
@@ -1341,9 +1344,8 @@
 			// * if one of the inputs above the calendars was focused, cancel that manual input
 			//
 			
+			if (this.minSpan && !this.endDate && date > this.startDate.minus({days: this.minSpan-1}) && date < this.startDate.plus({days:  this.minSpan-1})) {
 			// LUXON - ADD // do nothing if the date selceted is within the minspan.reduce range by one so last day can be selected.
-			if(!this.endDate && date > this.startDate.minus({days: this.minSpan-1}) && date < this.startDate.plus({days:  this.minSpan-1})) {
-				console.log('min-span-abort');
 			} else if ((this.startDate && this.endDate) && (date < this.startDate)) { // LUXON - ADD // if range set selected date to start.
 				this.endDate = null; // LUXON  - ADD
 				this.setStartDate(date.startOf('minute')); // LUXON	 - ADD
@@ -1364,7 +1366,7 @@
 					var second = this.timePickerSeconds ? parseInt(this.container.find('.left .secondselect').val(), 10) : 0;
 					date = date.set({hour: hour, minute: minute, second: second}); // LUXON
 				}
-				if(date < this.startDate) { // LUXON - ADD // allow reverse range selection.
+				if (date < this.startDate) { // LUXON - ADD // allow reverse range selection.
 					var oldStart = this.startDate.startOf('second'); // LUXON - ADD
 					this.reverseSelection = true; // LUXON - ADD
 					this.setStartDate(date); // LUXON - ADD
