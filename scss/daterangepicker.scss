@@ -180,9 +180,14 @@ $drp-white: #fff;
 		border-radius: 0;
 	}
 	td.min-span {
-		background-color: #a7a7a7;
-		color: #333;
-		border-radius: 0;
+		background-color: #64a5de;
+		color: $drp-white;
+		border-radius: 4px;
+		&:hover {
+			user-select: none;
+			background-color: #888;
+			color: #000;
+		}
 	}
 	td.start-date {
 		border-radius: 4px 0 0 4px;

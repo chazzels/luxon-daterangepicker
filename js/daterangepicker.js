@@ -31,7 +31,7 @@
 }(typeof window !== 'undefined' ? window : this, function(moment, $) {
 	var DateRangePicker = function(element, options, cb) {
 		
-		window.DateTime = luxon.DateTime; // LUXON - ADD
+		window.DateTime = luxon.DateTime; // LUXON - ADD // initalize luxon in the standard way.
 		
 		//default settings for options
 		this.parentEl = 'body';
@@ -40,10 +40,10 @@
 		this.endDate = DateTime.local().endOf('day'); // LUXON
 		this.minDate = false;
 		this.maxDate = false;
-		this.minSpan = false; // LUXON - ADD
+		this.minSpan = false; // LUXON - ADD // minSpan option set minium number of days to make a valid range.
 		this.maxSpan = false;
-		this.reverseSelection = false; // LUXON - ADD
-		this.dayOverflow = true; // LUXON - ADD
+		this.reverseSelection = false; // LUXON - ADD // track a date selection was made in reverse.
+		this.dayOverflow = true; // LUXON - ADD // show overflow days from other months in a calendar.
 		this.autoApply = false;
 		this.singleDatePicker = false;
 		this.showDropdowns = false;
@@ -76,8 +76,8 @@
 		this.locale = {
 			direction: 'ltr',
 			format: DateTime.DATE_SHORT, // LUXON
-			zone: {zone: "America/New_York"}, // LUXON - ADD
-			monthFormat: 'LLL', // 3 Letter month // LUXON - ADD
+			zone: {zone: "America/New_York"}, // LUXON - ADD // define a default time zone.
+			monthFormat: 'LLL', // 3 Letter month // LUXON - ADD // adapt the month formating for luxon.
 			separator: ' - ',
 			applyLabel: 'Apply',
 			cancelLabel: 'Cancel',
@@ -86,7 +86,7 @@
 			//daysOfWeek: luxon.Info.weekdays('short'), // LUXON - DISABLED
 			//monthNames: luxon.Info.months('short'), // LUXON - DISABLED
 			firstDay: 7, // LUXON - ADD
-			dayOrder: [7, 1, 2, 3, 4, 5, 6] // LUXON - ADD
+			dayOrder: [7, 1, 2, 3, 4, 5, 6] // LUXON - ADD // defined ordring of the week for standard display.
 		};
 		
 		this.callback = function() { };
@@ -226,7 +226,7 @@
 			this.maxSpan = options.maxSpan;
 		
 		if (typeof options.dayOverflow === 'boolean') // LUXON - ADD
-			this.dayOverflow = options.dayOverflow; // LUXNO - ADD
+			this.dayOverflow = options.dayOverflow; // LUXON - ADD
 		
 		if (typeof options.dateLimit === 'object') //backwards compat
 			this.maxSpan = options.dateLimit;
@@ -772,7 +772,7 @@
 			if (this.showWeekNumbers || this.showISOWeekNumbers)
 				html += '<th class="week">' + this.locale.weekLabel + '</th>';
 			
-			let that = this; // LUXON - ADD
+			let that = this; // LUXON - ADD // providing access to this scope within the each function.
 			$.each(luxon.Info.weekdays('short'), function(index, dayOfWeek) { // LUXON
 				html += '<th>' + luxon.Info.weekdays('short')[that.locale.dayOrder[index]-1] + '</th>'; // LUXON
 			});
@@ -811,7 +811,7 @@
 					if (calendar[row][col].weekday > 5) // LUXON
 						classes.push('weekend');
 					
-					//grey out the dates in other months displayed at beginning and end of this calendar
+					// LUXON - ADD // grey out the dates in other months displayed at beginning and end of this calendar
 					if (!this.dayOverflow && calendar[row][col].month != calendar[1][1].month) // LUXON - ADD
 						classes.push('off', 'overflow'); // LUXON - ADD
 					else if (calendar[row][col].month != calendar[1][1].month) // LUXON
@@ -840,11 +840,6 @@
 					//highlight dates in-between the selected dates
 					if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
 						classes.push('in-range');
-					
-						//classes.push('min-span') // LUXON - ADD
-						//console.log('rend-ermin-span-add');
-					if (calendar[row][col] >= this.startDate && calendar[row][col] < this.startDate.plus({days: this.minSpan})) {// LUXON - ADD
-					}
 					
 					//apply custom classes for this date
 					var isCustom = this.isCustomDate(calendar[row][col]);
@@ -1306,15 +1301,16 @@
 					var cal = $(el).parents('.drp-calendar');
 					var dt = cal.hasClass('left') ? leftCalendar.calendar[row][col] : rightCalendar.calendar[row][col];
 					
-					if (minSpan && date >= startDate && dt > startDate && dt < startDate.plus({days: minSpan})) { 
+					if (minSpan && date >= startDate && dt > startDate && dt < startDate.plus({days: minSpan-1})) { 
 					// LUXON - ADD // minSpan active. selected date after start. day after start and in range. 
 						$(el).addClass('min-span', 'in-range'); // LUXON - ADD
-					} else if(minSpan && date < startDate && dt < startDate && dt > startDate.minus({days: minSpan})) { 
+					} else if(minSpan && date < startDate && dt < startDate && dt > startDate.minus({days: minSpan-1})) { 
 					// LUXON - ADD // minSpan active. selected date before start. day before start and in range. 
 						$(el).addClass('min-span', 'in-range'); // LUXON - ADD
 					} else if ((dt > startDate && dt < date) || dt == date) { // LUXON
 						$(el).addClass('in-range');
-					} else if(dt < startDate && dt > date) { // LUXON - ADD
+					} else if(dt < startDate && dt > date) { 
+					// LUXON - ADD // second date is before start date.
 						$(el).addClass('in-range'); // LUXON - ADD
 					} else {
 						$(el).removeClass('in-range', 'min-span');
@@ -1334,7 +1330,7 @@
 			var col = title.substr(3, 1);
 			var cal = $(e.target).parents('.drp-calendar');
 			var date = cal.hasClass('left') ? this.leftCalendar.calendar[row][col] : this.rightCalendar.calendar[row][col];
-			this.reverseSelection = false;  // LUXON - ADD
+			this.reverseSelection = false;  // LUXON - ADD //reset and default to standard selection order.
 			
 			//
 			// this function needs to do a few things:
@@ -1345,12 +1341,10 @@
 			// * if one of the inputs above the calendars was focused, cancel that manual input
 			//
 			
-			if(date > this.startDate.minus({days: this.minSpan}) && date < this.startDate.plus({days:  this.minSpan})) {
+			// LUXON - ADD // do nothing if the date selceted is within the minspan.reduce range by one so last day can be selected.
+			if(!this.endDate && date > this.startDate.minus({days: this.minSpan-1}) && date < this.startDate.plus({days:  this.minSpan-1})) {
 				console.log('min-span-abort');
-				return;
-			}
-			
-			if ((this.startDate && this.endDate) && (date < this.startDate)) { // if range set selected date to start. // LUXON - ADD
+			} else if ((this.startDate && this.endDate) && (date < this.startDate)) { // LUXON - ADD // if range set selected date to start.
 				this.endDate = null; // LUXON  - ADD
 				this.setStartDate(date.startOf('minute')); // LUXON	 - ADD
 			} else if (this.endDate || date < this.startDate) { // picking start // LUXON
@@ -1370,8 +1364,8 @@
 					var second = this.timePickerSeconds ? parseInt(this.container.find('.left .secondselect').val(), 10) : 0;
 					date = date.set({hour: hour, minute: minute, second: second}); // LUXON
 				}
-				if(date < this.startDate) { // allow reverse range selection. // LUXON - ADD
-					var oldStart = this.startDate.startOf('second'); // LUXON -  ADD
+				if(date < this.startDate) { // LUXON - ADD // allow reverse range selection.
+					var oldStart = this.startDate.startOf('second'); // LUXON - ADD
 					this.reverseSelection = true; // LUXON - ADD
 					this.setStartDate(date); // LUXON - ADD
 					this.setEndDate(oldStart); // LUXON - ADD
@@ -1418,7 +1412,7 @@
 			
 		},
 		
-		autoApplyCheck: function() { // LUXON - ADD
+		autoApplyCheck: function() { // LUXON - ADD // centralize the auto apply check.
 			
 			if (this.autoApply) {
 				this.calculateChosenLabel();
