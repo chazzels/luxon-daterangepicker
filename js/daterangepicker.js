@@ -522,12 +522,6 @@
 			if (this.maxSpan && this.startDate.plus({days: this.maxSpan}) < this.endDate) // LUXON
 				this.endDate = this.startDate.plus({days: this.maxSpan}); // LUXON
 			
-			if (!this.reverseSelection && this.minSpan && this.startDate.plus({days: this.minSpan}) > this.endDate) // minSpan not meet normal date selection // LUXON - ADD
-				this.endDate = this.startDate.plus({days: this.minSpan-1}); // minus 1 to include the start day in the span. // LUXON - ADD 
-			
-			if (this.reverseSelection && this.minSpan && this.startDate.plus({days: this.minSpan}) > this.endDate) // minSpan not meet reverse date selection// LUXON - ADD
-				this.startDate = this.endDate.minus({days: this.minSpan-1}); // minus 1 to include the start day in the span. // LUXON - ADD 
-			
 			this.previousRightTime = this.endDate.startOf('minute'); // LUXON
 			
 			this.container.find('.drp-selected').html(this.startDate.toFormat(DateTime.DATE_SHORT) + this.locale.separator + this.endDate.toFormat(DateTime.DATE_SHORT)); // LUXON
@@ -847,8 +841,10 @@
 					if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
 						classes.push('in-range');
 					
-					if (calendar[row][col] > this.startDate.minus({days: this.minSpan}) && calendar[row][col] < this.startDate.plus({days: this.minSpan})) // LUXON - ADD
-						classes.push('min-span') // LUXON - ADD
+						//classes.push('min-span') // LUXON - ADD
+						//console.log('rend-ermin-span-add');
+					if (calendar[row][col] >= this.startDate && calendar[row][col] < this.startDate.plus({days: this.minSpan})) {// LUXON - ADD
+					}
 					
 					//apply custom classes for this date
 					var isCustom = this.isCustomDate(calendar[row][col]);
@@ -1108,8 +1104,7 @@
 					});
 				}
 			} else if (this.opens == 'center') {
-				var containerLeft = this.element.offset().left - parentOffset.left + this.element.outerWidth() / 2
-										- containerWidth / 2;
+				var containerLeft = this.element.offset().left - parentOffset.left + this.element.outerWidth() / 2 - containerWidth / 2;
 				if (containerLeft < 0) {
 					this.container.css({
 						top: containerTop,
@@ -1295,7 +1290,10 @@
 			var rightCalendar = this.rightCalendar;
 			var startDate = this.startDate;
 			var minSpan = this.minSpan ? this.minSpan : 0;
-			console.log('minSpan-context-set', minSpan);
+			
+			// LUXON - ADD // prevent minSpan dates fro being stuck in that state when direction chagnes.
+			$('td.min-span').removeClass('min-span');
+			
 			if (!this.endDate) {
 				this.container.find('.drp-calendar tbody td').each(function(index, el) {
 					
@@ -1308,16 +1306,18 @@
 					var cal = $(el).parents('.drp-calendar');
 					var dt = cal.hasClass('left') ? leftCalendar.calendar[row][col] : rightCalendar.calendar[row][col];
 					
-					console.log(dt > startDate.minus({days: minSpan}), dt < startDate.plus({days: minSpan}))
-					if(dt > startDate.minus({days: minSpan}) && dt < startDate.plus({days: minSpan})) { // LUXON - ADD
+					if (minSpan && date >= startDate && dt > startDate && dt < startDate.plus({days: minSpan})) { 
+					// LUXON - ADD // minSpan active. selected date after start. day after start and in range. 
 						$(el).addClass('min-span', 'in-range'); // LUXON - ADD
-						console.log('min-span');
+					} else if(minSpan && date < startDate && dt < startDate && dt > startDate.minus({days: minSpan})) { 
+					// LUXON - ADD // minSpan active. selected date before start. day before start and in range. 
+						$(el).addClass('min-span', 'in-range'); // LUXON - ADD
 					} else if ((dt > startDate && dt < date) || dt == date) { // LUXON
 						$(el).addClass('in-range');
 					} else if(dt < startDate && dt > date) { // LUXON - ADD
 						$(el).addClass('in-range'); // LUXON - ADD
 					} else {
-						$(el).removeClass('in-range');
+						$(el).removeClass('in-range', 'min-span');
 					}
 					
 				});
