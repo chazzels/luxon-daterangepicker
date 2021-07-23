@@ -847,6 +847,9 @@
 					if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
 						classes.push('in-range');
 					
+					if (calendar[row][col] > this.startDate.minus({days: this.minSpan}) && calendar[row][col] < this.startDate.plus({days: this.minSpan})) // LUXON - ADD
+						classes.push('min-span') // LUXON - ADD
+					
 					//apply custom classes for this date
 					var isCustom = this.isCustomDate(calendar[row][col]);
 					if (isCustom !== false) {
@@ -1291,6 +1294,8 @@
 			var leftCalendar = this.leftCalendar;
 			var rightCalendar = this.rightCalendar;
 			var startDate = this.startDate;
+			var minSpan = this.minSpan ? this.minSpan : 0;
+			console.log('minSpan-context-set', minSpan);
 			if (!this.endDate) {
 				this.container.find('.drp-calendar tbody td').each(function(index, el) {
 					
@@ -1303,7 +1308,11 @@
 					var cal = $(el).parents('.drp-calendar');
 					var dt = cal.hasClass('left') ? leftCalendar.calendar[row][col] : rightCalendar.calendar[row][col];
 					
-					if ((dt > startDate && dt < date) || dt == date) { // LUXON
+					console.log(dt > startDate.minus({days: minSpan}), dt < startDate.plus({days: minSpan}))
+					if(dt > startDate.minus({days: minSpan}) && dt < startDate.plus({days: minSpan})) { // LUXON - ADD
+						$(el).addClass('min-span', 'in-range'); // LUXON - ADD
+						console.log('min-span');
+					} else if ((dt > startDate && dt < date) || dt == date) { // LUXON
 						$(el).addClass('in-range');
 					} else if(dt < startDate && dt > date) { // LUXON - ADD
 						$(el).addClass('in-range'); // LUXON - ADD
@@ -1311,7 +1320,7 @@
 						$(el).removeClass('in-range');
 					}
 					
-					});
+				});
 			}
 			
 		},
@@ -1335,6 +1344,11 @@
 			// * if single date picker mode, and time picker isn't enabled, apply the selection immediately
 			// * if one of the inputs above the calendars was focused, cancel that manual input
 			//
+			
+			if(date > this.startDate.minus({days: this.minSpan}) && date < this.startDate.plus({days:  this.minSpan})) {
+				console.log('min-span-abort');
+				return;
+			}
 			
 			if ((this.startDate && this.endDate) && (date < this.startDate)) { // if range set selected date to start. // LUXON - ADD
 				this.endDate = null; // LUXON  - ADD
