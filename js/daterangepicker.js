@@ -1618,7 +1618,7 @@
 		}
 		
 	};
-
+	
 	$.fn.daterangepicker = function(options, callback) {
 		var implementOptions = $.extend(true, {}, $.fn.daterangepicker.defaultOptions, options);
 		this.each(function() {
@@ -1629,7 +1629,7 @@
 		});
 		return this;
 	};
-
+	
 	return DateRangePicker;
 
 }));
