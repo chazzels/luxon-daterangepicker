@@ -3,7 +3,7 @@
 ![Improvely.com](https://i.imgur.com/UTRlaar.png)
 
 ## Read Me
-This is a fork of the Date Range Picker component with changes made to remove the Moment.js dependancy and replace all date and time functionality with Luxon Library. The bulk of this conversion has been acccomplished, with only a few features not fully working. The example page provided by the original repository is almost entirely functional.
+This is a fork of the Date Range Picker component with changes made to remove the Moment.js dependancy and replace all date and time functionality with the Luxon Date and Time library. The bulk of this conversion has been acccomplished in overhauling all the internal time checks. The example page provided by the original repository has most examples entirely functional.
 
 #### Improvements:
 - option to defining a minimum number of days a range can be made of. (`option.minSpan` number - days)
@@ -11,6 +11,7 @@ This is a fork of the Date Range Picker component with changes made to remove th
 - option to hide days that are not in the month being displayed. (`option.dayOverflow` boolean - default on)
 - allow reverse date range selection instead of requiring start date always be selected first. 
 - enabled selection highlighting for both before and after the selected date.
+- added calsses to mark 
 
 #### Todo:
 - extend event system to include more states of the component.
@@ -22,7 +23,7 @@ This is a fork of the Date Range Picker component with changes made to remove th
 - add css variables for easy color pallette configuration.
 
 #### Notes:
-- when using `minSpan`, ranges that do not meat this requirement will have days automatically added to them. This addition will respect the order the dates were selected in (e.g. if the `minSpan = 3` and the 26th is selected first then the 24th is selected, the range will automatically be changed to 23rd-26th and vice versa ).
+- when using `minSpan`, ranges that do not meat this requirement will not be selectable. This is handled similair to how an invalid date works.
 
 ## Build System
 Trying to limit the work needed for myself I lifted this build code from some code I made.
@@ -32,7 +33,7 @@ __Build Packages:__ gulp, gulp-uglify, gulp-sass
 __Build Command:__ `$ gulp dist`  
 
 ## Fork Note
-I attempted to limit the changes to keep the code as close to source, but I did add some features that were not in the orginal library. Some of these I needed and others I felt help round out the functionality and experience. My main focus in doing this work was more on date range selection so the time picker and single picker could use more refinement. My goal is to have the library fully working but I am limited by time. 
+I attempted to limit the changes to keep the code as close to source, but I did add some features that were not in the orginal library. Some of these I needed and others I felt help round out the functionality and experience. My main focus in doing this work was more on date range selection so the time picker and single picker could use more attention. My goal is to have the library fully working but I am limited by time I can devote to this project. 
 
 ## Original Read Me:
 This date range picker component creates a dropdown menu from which a user can
